@@ -15,7 +15,7 @@ def get_system_metrics():
 def visualize_dashboard(metrics):
     st.markdown("### 🔍 Proactive IT Monitoring Dashboard")
 
-    tab1, tab2 = st.tabs(["📊 Metrics", "📈 Trends"])
+    tab1, tab2, tab3 = st.tabs(["📊 Metrics", "📈 Trends", "🛠️ Maintenance"])
 
     with tab1:
         st.subheader("Real-Time System Metrics")
@@ -32,12 +32,17 @@ def visualize_dashboard(metrics):
         ax.set_ylim(0, 100)
         st.pyplot(fig)
 
+    with tab3:
+        st.subheader("Maintenance Actions")
+        st.write("No maintenance actions scheduled.")
+
 # Main app
 def main():
     st.set_page_config("Proactive Monitoring", layout="wide")
 
     if "run_monitoring" not in st.session_state:
         st.session_state.run_monitoring = False
+
     with st.sidebar:
         st.header("⚙️ Settings")
         refresh_rate = st.slider("Refresh Rate (seconds)", 1, 10, 2)
@@ -50,7 +55,10 @@ def main():
     if st.session_state.run_monitoring:
         metrics = get_system_metrics()
         visualize_dashboard(metrics)
-        st.experimental_rerun()
+
+    if st.button("🔄 Refresh Metrics"):
+        metrics = get_system_metrics()
+        visualize_dashboard(metrics)
 
 if __name__ == "__main__":
     main()
